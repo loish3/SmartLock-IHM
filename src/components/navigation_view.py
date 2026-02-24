@@ -45,15 +45,15 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
 
     # Boutons dans Filaments
     g.bouton_filament1 = ctk.CTkButton(fenetre, text="PLA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
-                                       command=lambda: toggle_selection(g.bouton_filament1, "PLA"))
+                                       command=lambda: toggle_selection(g.bouton_filament1, "PLA", fenetre, revenir_callback))
     g.bouton_filament1.place(x=65, y=300, anchor="center")
 
     g.bouton_filament2 = ctk.CTkButton(fenetre, text="PETG", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black", 
-                                       command=lambda: toggle_selection(g.bouton_filament2, "PETG"))
+                                       command=lambda: toggle_selection(g.bouton_filament2, "PETG", fenetre, revenir_callback))
     g.bouton_filament2.place(relx=0.5, y=300, anchor="center")
 
     g.bouton_filament3 = ctk.CTkButton(fenetre, text="ASA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black", 
-                                       command=lambda: toggle_selection(g.bouton_filament3, "ASA"))
+                                       command=lambda: toggle_selection(g.bouton_filament3, "ASA", fenetre, revenir_callback))
     g.bouton_filament3.place(x=295, y=300, anchor="center")
 
     # --- SECTION ELECTRONIQUE ---
@@ -63,10 +63,12 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     g.trait_electronique.place(x=75, y=380, anchor="center")
 
     # Boutons dans électronique
-    g.bouton_electronique1 = ctk.CTkButton(fenetre, text="driver", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_electronique1 = ctk.CTkButton(fenetre, text="driver", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                           command=lambda: toggle_selection(g.bouton_electronique1, "driver", fenetre, revenir_callback))
     g.bouton_electronique1.place(x=65, y=420, anchor="center")
 
-    g.bouton_electronique2 = ctk.CTkButton(fenetre, text="moteur", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_electronique2 = ctk.CTkButton(fenetre, text="moteur", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                           command=lambda: toggle_selection(g.bouton_electronique2, "moteur", fenetre, revenir_callback))
     g.bouton_electronique2.place(relx=0.5, y=420, anchor="center")
 
     # --- BOUTON DE RETOUR ---
@@ -89,4 +91,4 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     g.btn_valider.place(x=285, rely=0.9, anchor="center")
 
     # Relancer le timer d'inactivité via le callback
-    g.timer_id = fenetre.after(30000, fermer_callback)
+    g.timer_id = fenetre.after(90000, revenir_callback)

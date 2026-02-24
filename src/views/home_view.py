@@ -22,6 +22,9 @@ def reset_timer(fenetre, event=None):
 def valider_badge(fenetre):
     if g.timer_id:
         fenetre.after_cancel(g.timer_id)
+        g.timer_id = None
+
+    fenetre.unbind("<Button-1>")
     
     # On cache tous les éléments de l'accueil
     g.label_logo.place_forget()
@@ -52,6 +55,8 @@ def revenir_accueil(fenetre):
     for widget in widgets_a_effacer:
         if widget is not None:
             widget.place_forget()
+
+    
     
     # On réaffiche les éléments de l'accueil (Écran 1)
     fenetre.configure(fg_color="white")
@@ -61,6 +66,7 @@ def revenir_accueil(fenetre):
     g.sous_titre2.place(relx=0.5, y=400, anchor="center")
     g.btn_simu.place(relx=0.95, rely=0.95, anchor="se")
     
+    fenetre.bind("<Button-1>", lambda e: reset_timer(fenetre, e))
     reset_timer(fenetre)
 
 # --- INITIALISATION DE L'ÉCRAN D'ACCUEIL ---
