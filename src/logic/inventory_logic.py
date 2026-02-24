@@ -9,7 +9,7 @@ def toggle_selection(bouton, item_name, fenetre, revenir_callback):
         bouton.configure(fg_color="#D3D3D3")
     else:
         g.panier.append(item_name)
-        bouton.configure(fg_color="#87CEEB") 
+        bouton.configure(fg_color="#7CDD81") 
     
     update_validation_button()
 
