@@ -2,6 +2,8 @@
 import customtkinter as ctk
 from src.models import globals as g
 from src.logic.inventory_logic import toggle_selection
+from src.views.selection_couleur import ecran_choix_couleur
+
 
 def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     # --- HEADER ---
@@ -28,13 +30,16 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     g.trait_tendances.place(x=69, y=150, anchor="center")
 
     # Boutons Item Tendances
-    g.bouton_tendance1 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_tendance1 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                       command=lambda: toggle_selection(g.bouton_tendance1, "item", fenetre, revenir_callback))
     g.bouton_tendance1.place(x=65, y=190, anchor="center")
 
-    g.bouton_tendance2 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_tendance2 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                       command=lambda: toggle_selection(g.bouton_tendance2, "item", fenetre, revenir_callback))
     g.bouton_tendance2.place(relx=0.5, y=190, anchor="center")
 
-    g.bouton_tendance3 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_tendance3 = ctk.CTkButton(fenetre, text="item", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                       command=lambda: toggle_selection(g.bouton_tendance3, "item", fenetre, revenir_callback))
     g.bouton_tendance3.place(x=295, y=190, anchor="center")
 
     # --- SECTION FILAMENTS ---
@@ -45,7 +50,7 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
 
     # Boutons dans Filaments
     g.bouton_filament1 = ctk.CTkButton(fenetre, text="PLA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
-                                       command=lambda: toggle_selection(g.bouton_filament1, "PLA", fenetre, revenir_callback))
+        command=lambda: ecran_choix_couleur(fenetre, "PLA", revenir_callback, lambda: ecran_navigation(fenetre, revenir_callback, fermer_callback)))
     g.bouton_filament1.place(x=65, y=300, anchor="center")
 
     g.bouton_filament2 = ctk.CTkButton(fenetre, text="PETG", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black", 
