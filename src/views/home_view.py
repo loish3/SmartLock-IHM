@@ -38,13 +38,15 @@ def valider_badge(fenetre):
     )
 
 def revenir_accueil(fenetre):
+    g.panier = []
     # Liste de tous les widgets à nettoyer (Écran 2)
     widgets_a_effacer = [
         g.titre_nav, g.trait_nav, g.btn_retour, g.sous_titre_nav1, g.trait_tendances,
         g.bouton_tendance, g.bouton_tendance1, g.bouton_tendance2, g.bouton_tendance3,
         g.bouton_filaments, g.sous_titre_nav2, g.trait_filaments,
         g.bouton_Electronique, g.sous_titre_nav3, g.trait_electronique, g.bouton_filament1,
-        g.bouton_filament2, g.bouton_filament3, g.bouton_electronique1, g.bouton_electronique2
+        g.bouton_filament2, g.bouton_filament3, g.bouton_electronique1, g.bouton_electronique2,
+        g.btn_valider
     ]
     
     for widget in widgets_a_effacer:

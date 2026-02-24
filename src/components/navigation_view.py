@@ -1,6 +1,7 @@
 # src/components/navigation_view.py
 import customtkinter as ctk
 from src.models import globals as g
+from src.logic.inventory_logic import toggle_selection
 
 def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     # --- HEADER ---
@@ -43,13 +44,16 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     g.trait_filaments.place(x=66, y=260, anchor="center")
 
     # Boutons dans Filaments
-    g.bouton_filament1 = ctk.CTkButton(fenetre, text="PLA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_filament1 = ctk.CTkButton(fenetre, text="PLA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black",
+                                       command=lambda: toggle_selection(g.bouton_filament1, "PLA"))
     g.bouton_filament1.place(x=65, y=300, anchor="center")
 
-    g.bouton_filament2 = ctk.CTkButton(fenetre, text="PETG", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_filament2 = ctk.CTkButton(fenetre, text="PETG", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black", 
+                                       command=lambda: toggle_selection(g.bouton_filament2, "PETG"))
     g.bouton_filament2.place(relx=0.5, y=300, anchor="center")
 
-    g.bouton_filament3 = ctk.CTkButton(fenetre, text="ASA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black")
+    g.bouton_filament3 = ctk.CTkButton(fenetre, text="ASA", width=105, height=50, fg_color="#D3D3D3", hover_color="#AAAAAA", text_color="Black", 
+                                       command=lambda: toggle_selection(g.bouton_filament3, "ASA"))
     g.bouton_filament3.place(x=295, y=300, anchor="center")
 
     # --- SECTION ELECTRONIQUE ---
@@ -69,6 +73,20 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     # Ici on utilise le callback passé en paramètre pour la déconnexion
     g.btn_retour = ctk.CTkButton(fenetre, text="Déconnexion", width=65, height=30, fg_color="#E74C3C", hover_color="#C0392B", command=revenir_callback)
     g.btn_retour.place(x=315, y=25, anchor="center")
+
+    # --- BOUTON VALIDER ---
+    g.btn_valider = ctk.CTkButton(
+        fenetre, 
+        text="✓", 
+        font=("Arial", 30, "bold"),
+        width=70, height=70, 
+        corner_radius=35, 
+        fg_color="gray",  
+        state="disabled", 
+        text_color="white",
+        command=lambda: print(f"Commande : {g.panier}")
+    )
+    g.btn_valider.place(x=285, rely=0.9, anchor="center")
 
     # Relancer le timer d'inactivité via le callback
     g.timer_id = fenetre.after(30000, fermer_callback)

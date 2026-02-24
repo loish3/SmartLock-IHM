@@ -10,4 +10,5 @@ bouton_filament2 = None
 bouton_filament3 = None
 bouton_electronique1 = None
 bouton_electronique2 = None
+btn_valider = None
 panier = []
