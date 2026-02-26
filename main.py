@@ -1,10 +1,13 @@
 # main.py
 import customtkinter as ctk
+from src.models import globals as g
 from src.views.home_view import setup_home_screen, reset_timer
+
 
 def main():
     # --- CONFIGURATION FENÊTRE PRINCIPALE ---
     fenetre = ctk.CTk()
+    g.fenetre_principale = fenetre
     fenetre.geometry('360x550') 
     fenetre.title('Écran de l\'armoire')
     fenetre.configure(fg_color="white")

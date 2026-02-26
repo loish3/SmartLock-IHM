@@ -13,7 +13,7 @@ def reset_timer(fenetre, event=None):
     if g.timer_id:
         fenetre.after_cancel(g.timer_id)
     g.timer_id = fenetre.after(30000, lambda: fermer_fenetre(fenetre))
-    print("Chrono réinitialisé !")
+    print("Chrono Accueil (30s avant extinction) réinitialisé !")
 
 def valider_badge(fenetre):
     if g.timer_id:
@@ -36,40 +36,43 @@ def valider_badge(fenetre):
     ecran_navigation(
         fenetre, 
         revenir_callback=lambda: revenir_accueil(fenetre), 
-        fermer_callback=lambda: fermer_fenetre(fenetre)
+        fermer_callback=lambda: fermer_fenetre(fenetre) 
     )
 
 def revenir_accueil(fenetre):
+    print("Déconnexion : Retour accueil, 30s avant extinction.")
     g.panier = []
-    # Liste de tous les widgets à nettoyer (Écran Navigation + Écran Couleur)
-    widgets_a_effacer = [
-        g.titre_nav, g.trait_nav, g.btn_retour, g.sous_titre_nav1, g.trait_tendances,
-        g.bouton_tendance, g.bouton_tendance1, g.bouton_tendance2, g.bouton_tendance3,
-        g.bouton_filaments, g.sous_titre_nav2, g.trait_filaments,
-        g.bouton_Electronique, g.sous_titre_nav3, g.trait_electronique, g.bouton_filament1,
-        g.bouton_filament2, g.bouton_filament3, g.bouton_electronique1, g.bouton_electronique2,
-        g.btn_valider, g.titre_couleur, g.btn_annuler_couleur, 
-        g.btn_rouge, g.btn_bleu, g.btn_vert
-    ]
+
+    # --- 1. NETTOYAGE RADICAL ---
+    # On parcourt tous les widgets enfants de la fenêtre et on les cache
+    # Cela évite que des éléments de l'écran 'Selection' ou 'Couleur' restent affichés
+    for widget in fenetre.winfo_children():
+        widget.place_forget()
+
+    # --- 2. GESTION DU TIMER ---
+    # On annule le timer de navigation (90s) s'il existe
+    if g.timer_id:
+        fenetre.after_cancel(g.timer_id)
     
-    # On efface aussi les boutons dynamiques de couleur s'ils existent
-    if hasattr(g, 'boutons_couleurs'):
-        for btn in g.boutons_couleurs:
-            btn.place_forget()
+    # On lance le timer d'extinction finale (30s)
+    # Assure-toi que la fonction fermer_fenetre est bien définie au-dessus
+    g.timer_id = fenetre.after(30000, lambda: fermer_fenetre(fenetre))
 
-    for widget in widgets_a_effacer:
-        if widget is not None:
-            widget.place_forget()
-
-    # On réaffiche les éléments de l'accueil
+    # --- 3. RÉAFFICHAGE DES ÉLÉMENTS DE L'ACCUEIL ---
     fenetre.configure(fg_color="white")
+    
+    # On replace les éléments de base du menu badge
     g.label_logo.place(relx=0.5, y=165, anchor="center")
     g.sous_titre1.place(relx=0.5, y=275, anchor="center")
     g.trait_accueil.place(relx=0.5, y=315, anchor="center")
     g.sous_titre2.place(relx=0.5, y=400, anchor="center")
     g.btn_simu.place(relx=0.95, rely=0.95, anchor="se")
     
+    # --- 4. RÉACTIVATION DU RESET AU CLIC ---
+    # Permet de relancer les 30s si on touche l'écran d'accueil
     fenetre.bind("<Button-1>", lambda e: reset_timer(fenetre, e))
+    
+    # On appelle reset_timer une fois pour initialiser le décompte proprement
     reset_timer(fenetre)
 
 # --- INITIALISATION DE L'ÉCRAN D'ACCUEIL ---
