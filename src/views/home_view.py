@@ -21,8 +21,7 @@ def valider_badge(fenetre):
         g.timer_id = None
 
     fenetre.unbind("<Button-1>")
-    
-    # --- IMPORT LOCAL POUR ÉVITER L'ERREUR CIRCULAIRE ---
+
     from src.components.navigation_view import ecran_navigation
     
     # On cache tous les éléments de l'accueil

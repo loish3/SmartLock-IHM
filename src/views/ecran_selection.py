@@ -7,8 +7,24 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
     for widget in fenetre.winfo_children():
         widget.place_forget()
 
+    def relancer_timer():
+        """Réinitialise le compte à rebours de 90 secondes."""
+        """Réinitialise le compte à rebours et nettoie si le temps est écoulé."""
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
+        
+        def temps_ecoule():
+            # NETTOYAGE CRUCIAL AVANT LE LOGOUT
+            for widget in fenetre.winfo_children():
+                widget.place_forget()
+            relancer_nav_callback() # Ou revenir_callback selon ton cas
+
+        g.timer_id = fenetre.after(90000, temps_ecoule)
+    
+    relancer_timer()
+
+
     # --- 2. LOGIQUE DE STOCK RÉEL ---
-    # On récupère la valeur dans globals.py, sinon 0 si l'item n'existe pas
     stock_disponible = g.stocks.get(nom_item, 0)
 
     # --- 3. TITRE ET INFOS ---
@@ -19,7 +35,6 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
         text_color="black"
     ).place(relx=0.5, y=60, anchor="center")
 
-    # Cadre pour les infos de stock
     cadre_info = ctk.CTkFrame(fenetre, width=300, height=80, fg_color="#F0F0F0")
     cadre_info.place(relx=0.5, y=140, anchor="center")
 
@@ -56,27 +71,30 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
     entree_qte.insert(0, "100") 
     entree_qte.place(relx=0.5, y=275, anchor="center")
 
-    # --- 5. LOGIQUE DE VALIDATION ---
+    # --- 5. LOGIQUE DE VALIDATION (Version Dictionnaire) ---
     def valider_et_ajouter():
-        qte = entree_qte.get()
-        if qte.isdigit() and int(qte) > 0:
-            if int(qte) <= stock_disponible:
-                # Ajout au panier avec le formatage pour le bouton vert
-                g.panier.append(f"{nom_item} ({qte}g)")
+        qte_saisie = entree_qte.get()
+        if qte_saisie.isdigit() and int(qte_saisie) > 0:
+            nouvelle_qte = int(qte_saisie)
+            
+            if nouvelle_qte <= stock_disponible:
+                # --- LOGIQUE DE FUSION SIMPLIFIÉE ---
+                if nom_item in g.panier:
+                    g.panier[nom_item] += nouvelle_qte # Fusion automatique
+                else:
+                    g.panier[nom_item] = nouvelle_qte # Création
                 
-                # Nettoyage total avant de partir
+                from src.logic.inventory_logic import update_validation_button
+                update_validation_button()
+
+                # Nettoyage et retour
                 for widget in fenetre.winfo_children():
                     widget.place_forget()
-                
-                # Retour à la navigation
                 relancer_nav_callback()
             else:
-                print("Erreur : Pas assez de stock !")
-        else:
-            print("Erreur : Quantité invalide")
+                print("Pas assez de stock !")
 
     def annuler_action():
-        # Nettoyage total avant de partir
         for widget in fenetre.winfo_children():
             widget.place_forget()
         relancer_nav_callback()

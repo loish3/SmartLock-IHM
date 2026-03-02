@@ -28,7 +28,7 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
     )
     g.cadre_liste.place(relx=0.5, y=205, anchor="center")
 
-    # 4. AFFICHAGE DES ITEMS
+    # 4. AFFICHAGE DES ITEMS (Modifié pour Dictionnaire)
     if not g.panier:
         ctk.CTkLabel(
             g.cadre_liste, 
@@ -37,10 +37,11 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
             text_color="gray"
         ).pack(pady=110)
     else:
-        for item in g.panier:
+        # On boucle sur les clés (item) et les valeurs (quantite)
+        for item, quantite in g.panier.items():
             ctk.CTkLabel(
                 g.cadre_liste, 
-                text=f"• {item}", 
+                text=f"• {item} (x{quantite})", # Affiche le cumul (ex: PLA Bleu x200)
                 font=("Arial", 14), 
                 text_color="black",
                 anchor="w"
@@ -52,8 +53,7 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
             widget.place_forget()
         relancer_nav_callback()
 
-    # 6. BOUTONS AJUSTÉS (Légèrement plus bas pour le centrage)
-    # On passe de y=420 à y=430
+    # 6. BOUTONS AJUSTÉS
     g.btn_retour_panier = ctk.CTkButton(
         fenetre, text="← Continuer la sélection", width=250, height=40,
         fg_color="#B9E9FF", text_color="black", hover_color="#A0D8F0",
@@ -62,11 +62,11 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
     )
     g.btn_retour_panier.place(relx=0.5, y=430, anchor="center")
 
-    # On passe de y=470 à y=480
     if g.panier:
         ctk.CTkButton(
             fenetre, text="Vider le panier", width=150, height=30,
             fg_color="#FFCCCC", text_color="#C0392B", hover_color="#FFB3B3",
             font=("Arial", 11),
+            # On utilise .clear() car c'est un dictionnaire
             command=lambda: [g.panier.clear(), ouvrir_vue_panier(fenetre, relancer_nav_callback)]
         ).place(relx=0.5, y=480, anchor="center")
