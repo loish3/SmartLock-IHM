@@ -16,7 +16,7 @@ def ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callba
         g.bouton_filaments, g.sous_titre_nav2, g.trait_filaments,
         g.bouton_Electronique, g.sous_titre_nav3, g.trait_electronique, g.bouton_filament1,
         g.bouton_filament2, g.bouton_filament3, g.bouton_electronique1, g.bouton_electronique2,
-        g.btn_valider, g.btn_voir_panier # On efface le bouton panier de la nav
+        g.btn_valider, g.btn_voir_panier 
     ]
     for w in widgets_a_effacer:
         if w is not None:
@@ -76,18 +76,18 @@ def ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callba
     from src.views.vue_panier import ouvrir_vue_panier
     g.btn_voir_panier = ctk.CTkButton(
         fenetre, text="Voir Panier", width=200, height=40,
-        fg_color="#B9E9FF", hover_color="#A0D8F0", text_color="black",
+        fg_color="#E9F904", hover_color="#D4E404", text_color="black",
         font=("Arial", 12, "bold"),
         command=lambda: ouvrir_vue_panier(fenetre, lambda: ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callback))
     )
-    g.btn_voir_panier.place(relx=0.5, y=440, anchor="center")
+    g.btn_voir_panier.place(relx=0.5, y=420, anchor="center")
 
     # 5. Bouton Annuler (Placé à 500)
     g.btn_annuler_couleur = ctk.CTkButton(
-        fenetre, text="Annuler", fg_color="gray", width=200, height=40,
+        fenetre, text="Annuler", fg_color="#E74C3C", text_color="black", width=200, height=40,
         command=lambda: [nettoyer_ecran_couleur(), relancer_nav_callback()]
     )
-    g.btn_annuler_couleur.place(relx=0.5, y=500, anchor="center")
+    g.btn_annuler_couleur.place(relx=0.5, y=480, anchor="center")
 
 def valider_choix_couleur(materiau, couleur, relancer_nav_callback):
     nom_item = f"{materiau} {couleur}"

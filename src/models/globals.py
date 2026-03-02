@@ -1,7 +1,7 @@
 # src/models/globals.py
 fenetre_principale = None
 timer_id = None
-panier = {} # Dictionnaire crucial pour la fusion des quantités
+panier = {}
 
 # Accueil
 label_logo = sous_titre1 = trait_accueil = sous_titre2 = btn_simu = None
@@ -9,18 +9,18 @@ label_logo = sous_titre1 = trait_accueil = sous_titre2 = btn_simu = None
 # --- GESTION DES STOCKS --- IL FAUDRA REFLECHIR AVEC LA PARTIE BACK END ET TOUT
 stocks = {
     # FILAMENTS
-    "PLA Rouge": 1000, "PLA Bleu": 1500, "PLA Vert": 800, "PLA Jaune": 2000, "PLA Orange": 500, "PLA Gris": 1200,
-    "PETG Rouge": 1000, "PETG Bleu": 1500, "PETG Vert": 800, "PETG Jaune": 2000, "PETG Orange": 500, "PETG Gris": 1200,
-    "ASA Rouge": 1000, "ASA Bleu": 1500, "ASA Vert": 800, "ASA Jaune": 2000, "ASA Orange": 500, "ASA Gris": 1200,
+    "PLA Rouge": 10, "PLA Bleu": 10, "PLA Vert": 10, "PLA Jaune": 10, "PLA Orange": 10, "PLA Gris": 10,
+    "PETG Rouge": 10, "PETG Bleu": 10, "PETG Vert": 10, "PETG Jaune": 10, "PETG Orange": 10, "PETG Gris": 10,
+    "ASA Rouge": 10, "ASA Bleu": 10, "ASA Vert": 10, "ASA Jaune": 10, "ASA Orange": 10, "ASA Gris": 10,
 
     # TENDANCES (Ajoute-les pour éviter le stock à 0)
-    "Item 1": 50, 
-    "Item 2": 50, 
-    "Item 3": 50,
+    "Item 1": 10, 
+    "Item 2": 10, 
+    "Item 3": 10,
 
     # ELECTRONIQUE (Ajoute-les aussi)
-    "driver": 100,
-    "moteur": 20
+    "driver": 10,
+    "moteur": 10
 }
 
 # --- ÉLÉMENTS DE NAVIGATION ---

@@ -31,7 +31,6 @@ def valider_badge(fenetre):
     g.sous_titre2.place_forget()
     g.btn_simu.place_forget()
     
-    # On affiche l'écran de navigation
     ecran_navigation(
         fenetre, 
         revenir_callback=lambda: revenir_accueil(fenetre), 
@@ -43,8 +42,6 @@ def revenir_accueil(fenetre):
     g.panier = []
 
     # --- 1. NETTOYAGE RADICAL ---
-    # On parcourt tous les widgets enfants de la fenêtre et on les cache
-    # Cela évite que des éléments de l'écran 'Selection' ou 'Couleur' restent affichés
     for widget in fenetre.winfo_children():
         widget.place_forget()
 
@@ -54,7 +51,6 @@ def revenir_accueil(fenetre):
         fenetre.after_cancel(g.timer_id)
     
     # On lance le timer d'extinction finale (30s)
-    # Assure-toi que la fonction fermer_fenetre est bien définie au-dessus
     g.timer_id = fenetre.after(30000, lambda: fermer_fenetre(fenetre))
 
     # --- 3. RÉAFFICHAGE DES ÉLÉMENTS DE L'ACCUEIL ---
@@ -68,10 +64,8 @@ def revenir_accueil(fenetre):
     g.btn_simu.place(relx=0.95, rely=0.95, anchor="se")
     
     # --- 4. RÉACTIVATION DU RESET AU CLIC ---
-    # Permet de relancer les 30s si on touche l'écran d'accueil
     fenetre.bind("<Button-1>", lambda e: reset_timer(fenetre, e))
     
-    # On appelle reset_timer une fois pour initialiser le décompte proprement
     reset_timer(fenetre)
 
 # --- INITIALISATION DE L'ÉCRAN D'ACCUEIL ---

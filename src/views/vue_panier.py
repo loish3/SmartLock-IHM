@@ -37,11 +37,10 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
             text_color="gray"
         ).pack(pady=110)
     else:
-        # On boucle sur les clés (item) et les valeurs (quantite)
         for item, quantite in g.panier.items():
             ctk.CTkLabel(
                 g.cadre_liste, 
-                text=f"• {item} (x{quantite})", # Affiche le cumul (ex: PLA Bleu x200)
+                text=f"• {item} (x{quantite})", 
                 font=("Arial", 14), 
                 text_color="black",
                 anchor="w"
@@ -60,7 +59,7 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
         font=("Arial", 13, "bold"),
         command=quitter_panier
     )
-    g.btn_retour_panier.place(relx=0.5, y=430, anchor="center")
+    g.btn_retour_panier.place(relx=0.5, y=450, anchor="center")
 
     if g.panier:
         ctk.CTkButton(
@@ -69,4 +68,4 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
             font=("Arial", 11),
             # On utilise .clear() car c'est un dictionnaire
             command=lambda: [g.panier.clear(), ouvrir_vue_panier(fenetre, relancer_nav_callback)]
-        ).place(relx=0.5, y=480, anchor="center")
+        ).place(relx=0.5, y=500, anchor="center")

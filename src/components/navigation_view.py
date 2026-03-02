@@ -103,14 +103,14 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     g.btn_voir_panier.place(x=20, rely=0.94, anchor="sw")
 
     # --- BOUTONS NAVIGATION & VALIDATION ---
-    g.btn_retour = ctk.CTkButton(fenetre, text="Déconnexion", width=60, height=30, fg_color="#E74C3C", command=auto_logout)
+    g.btn_retour = ctk.CTkButton(fenetre, text="Déconnexion", width=60, height=30, fg_color="#E74C3C", hover_color="#7E4A45", command=auto_logout)
     g.btn_retour.place(x=310, y=25, anchor="center")
 
     from src.logic.inventory_logic import update_validation_button
     g.btn_valider = ctk.CTkButton(
         fenetre, text="✓", font=("Arial", 30, "bold"),
         width=70, height=70, corner_radius=35, 
-        fg_color="gray", state="disabled", text_color="white",
+        fg_color="gray", hover_color="#123F09", state="disabled", text_color="white",
         command=lambda: print(f"Commande finale : {g.panier}")
     )
     g.btn_valider.place(x=285, rely=0.9, anchor="center")
