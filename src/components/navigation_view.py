@@ -4,22 +4,31 @@ from src.models import globals as g
 from src.logic.inventory_logic import toggle_selection
 from src.views.selection_couleur import ecran_choix_couleur
 from src.views.vue_panier import ouvrir_vue_panier
+from src.views.validation_finale import ouvrir_validation_finale
 
 def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     
-    # --- FONCTION DE NETTOYAGE POUR LE TIMER ---
+    # --- NETTOYAGE DE SÉCURITÉ (INDISPENSABLE AU RETOUR DE VALIDATION) ---
+    for widget in fenetre.winfo_children():
+        widget.place_forget()
+
+    # --- FONCTION DE NETTOYAGE (LOGOUT / TIMER) ---
     def auto_logout():
-        """Nettoie tous les widgets avant de revenir à l'écran précédent."""
+        """Supprime tous les widgets avant de revenir à l'accueil."""
         for widget in fenetre.winfo_children():
             widget.place_forget()
         revenir_callback()
 
-    # --- FONCTION INTERNE POUR LA MÉMOIRE VISUELLE (MISE À JOUR) ---
+    # --- FONCTION DE TRANSITION VERS VALIDATION ---
+    def aller_a_validation():
+        """Nettoie l'écran et lance la validation finale."""
+        for widget in fenetre.winfo_children():
+            widget.place_forget()
+        ouvrir_validation_finale(fenetre, lambda: ecran_navigation(fenetre, revenir_callback, fermer_callback))
+
+    # --- FONCTION INTERNE POUR LA COULEUR DES BOUTONS ---
     def get_color(item_name):
-        """
-        Vérifie si l'item ou une variante (ex: 'PLA Rouge') est dans le panier.
-        """
-        # On regarde si une clé commence par le nom (ex: 'PLA' détecte 'PLA Bleu')
+        """Vérifie si l'item est dans le panier pour adapter la couleur."""
         actif = any(key.startswith(item_name) for key in g.panier.keys())
         return "#7CDD81" if actif else "#D3D3D3"
 
@@ -93,7 +102,7 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
                                            command=lambda: toggle_selection(g.bouton_electronique2, "moteur", fenetre, revenir_callback))
     g.bouton_electronique2.place(relx=0.5, y=420, anchor="center")
 
-    # --- BOUTON VOIR PANIER ---
+    # --- BOUTONS BAS (PANIER & DÉCONNEXION) ---
     g.btn_voir_panier = ctk.CTkButton(
         fenetre, text="Voir Panier", width=115, height=40, corner_radius=20,
         fg_color="#E9F904", hover_color="#D4E404", text_color="black",
@@ -102,16 +111,16 @@ def ecran_navigation(fenetre, revenir_callback, fermer_callback):
     )
     g.btn_voir_panier.place(x=20, rely=0.94, anchor="sw")
 
-    # --- BOUTONS NAVIGATION & VALIDATION ---
     g.btn_retour = ctk.CTkButton(fenetre, text="Déconnexion", width=60, height=30, fg_color="#E74C3C", hover_color="#7E4A45", command=auto_logout)
     g.btn_retour.place(x=310, y=25, anchor="center")
 
+    # --- BOUTON DE VALIDATION ---
     from src.logic.inventory_logic import update_validation_button
     g.btn_valider = ctk.CTkButton(
         fenetre, text="✓", font=("Arial", 30, "bold"),
         width=70, height=70, corner_radius=35, 
         fg_color="gray", hover_color="#123F09", state="disabled", text_color="white",
-        command=lambda: print(f"Commande finale : {g.panier}")
+        command=aller_a_validation
     )
     g.btn_valider.place(x=285, rely=0.9, anchor="center")
     

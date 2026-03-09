@@ -13,7 +13,7 @@ def reset_timer(fenetre, event=None):
     if g.timer_id:
         fenetre.after_cancel(g.timer_id)
     g.timer_id = fenetre.after(30000, lambda: fermer_fenetre(fenetre))
-    print("Chrono Accueil (30s avant extinction) réinitialisé !")
+    print("Chrono Accueil réinitialisé !")
 
 def valider_badge(fenetre):
     if g.timer_id:
@@ -22,14 +22,12 @@ def valider_badge(fenetre):
 
     fenetre.unbind("<Button-1>")
 
+    # --- NETTOYAGE RADICAL ---
+    # On détruit tout pour éviter que les boutons de l'accueil restent en mémoire
+    for widget in fenetre.winfo_children():
+        widget.destroy()
+
     from src.components.navigation_view import ecran_navigation
-    
-    # On cache tous les éléments de l'accueil
-    g.label_logo.place_forget()
-    g.sous_titre1.place_forget()
-    g.trait_accueil.place_forget()
-    g.sous_titre2.place_forget()
-    g.btn_simu.place_forget()
     
     ecran_navigation(
         fenetre, 
@@ -38,39 +36,26 @@ def valider_badge(fenetre):
     )
 
 def revenir_accueil(fenetre):
-    print("Déconnexion : Retour accueil, 30s avant extinction.")
-    g.panier = []
+    print("Déconnexion : Retour accueil.")
+    
+    # --- 1. LE FIX : PANIER DOIT ÊTRE UN DICTIONNAIRE ---
+    g.panier = {} 
 
-    # --- 1. NETTOYAGE RADICAL ---
-    for widget in fenetre.winfo_children():
-        widget.place_forget()
-
-    # --- 2. GESTION DU TIMER ---
-    # On annule le timer de navigation (90s) s'il existe
+    # --- 2. NETTOYAGE COMPLET ---
     if g.timer_id:
         fenetre.after_cancel(g.timer_id)
-    
-    # On lance le timer d'extinction finale (30s)
-    g.timer_id = fenetre.after(30000, lambda: fermer_fenetre(fenetre))
+        g.timer_id = None
 
-    # --- 3. RÉAFFICHAGE DES ÉLÉMENTS DE L'ACCUEIL ---
-    fenetre.configure(fg_color="white")
-    
-    # On replace les éléments de base du menu badge
-    g.label_logo.place(relx=0.5, y=165, anchor="center")
-    g.sous_titre1.place(relx=0.5, y=275, anchor="center")
-    g.trait_accueil.place(relx=0.5, y=315, anchor="center")
-    g.sous_titre2.place(relx=0.5, y=400, anchor="center")
-    g.btn_simu.place(relx=0.95, rely=0.95, anchor="se")
-    
-    # --- 4. RÉACTIVATION DU RESET AU CLIC ---
-    fenetre.bind("<Button-1>", lambda e: reset_timer(fenetre, e))
-    
-    reset_timer(fenetre)
+    for widget in fenetre.winfo_children():
+        widget.destroy()
+
+    # --- 3. RECONSTRUCTION DE L'ACCUEIL ---
+    setup_home_screen(fenetre)
 
 # --- INITIALISATION DE L'ÉCRAN D'ACCUEIL ---
 
 def setup_home_screen(fenetre):
+    fenetre.configure(fg_color="white")
     img_path = os.path.join('assets', 'images', 'logo_FabLab.png')
     
     try:
@@ -101,4 +86,6 @@ def setup_home_screen(fenetre):
     )
     g.btn_simu.place(relx=0.95, rely=0.95, anchor="se")
     
+    # Réactivation du timer
     fenetre.bind("<Button-1>", lambda e: reset_timer(fenetre, e))
+    reset_timer(fenetre)

@@ -1,4 +1,3 @@
-# src/views/selection_couleur.py
 import customtkinter as ctk
 from src.models import globals as g
 
@@ -6,9 +5,17 @@ def ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callba
     # 1. On nettoie l'affichage de la navigation
     for widget in fenetre.winfo_children():
         widget.place_forget()
+    
+    # --- GESTION DU TIMER (CORRIGÉ : pointe vers relancer_nav_callback) ---
     if g.timer_id:
         fenetre.after_cancel(g.timer_id)
-    g.timer_id = fenetre.after(90000, revenir_callback)
+    
+    # On définit une fonction de sortie automatique vers la NAVIGATION
+    def auto_retour_navigation():
+        nettoyer_ecran_couleur()
+        relancer_nav_callback()
+
+    g.timer_id = fenetre.after(90000, auto_retour_navigation)
     
     widgets_a_effacer = [
         g.titre_nav, g.trait_nav, g.btn_retour, g.sous_titre_nav1, g.trait_tendances,
@@ -27,65 +34,79 @@ def ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callba
     g.titre_couleur.place(relx=0.5, y=50, anchor="center")
 
     # --- LOGIQUE VISUELLE : Détermination des couleurs selon le panier ---
-    item_rouge = f"{materiau} Rouge"
-    item_bleu = f"{materiau} Bleu"
-    item_vert = f"{materiau} Vert"
-    item_jaune = f"{materiau} Jaune"
-    item_orange = f"{materiau} Orange"
-    item_gris = f"{materiau} Gris"
+    def get_color(color_name):
+        full_name = f"{materiau} {color_name}"
+        return "#7CDD81" if any(item.startswith(full_name) for item in g.panier) else None
 
-    c_rouge = "#7CDD81" if any(item.startswith(item_rouge) for item in g.panier) else "#E89595"
-    c_bleu = "#7CDD81" if any(item.startswith(item_bleu) for item in g.panier) else "#B9E9FF"
-    c_vert = "#7CDD81" if any(item.startswith(item_vert) for item in g.panier) else "#C1FFD7"
-    c_jaune = "#7CDD81" if any(item.startswith(item_jaune) for item in g.panier) else "#FFFF9D"
-    c_orange = "#7CDD81" if any(item.startswith(item_orange) for item in g.panier) else "#F6CF94"
-    c_gris = "#7CDD81" if any(item.startswith(item_gris) for item in g.panier) else "#D7D7D7"
+    c_rouge = get_color("Rouge") or "#E89595"
+    c_bleu = get_color("Bleu") or "#B9E9FF"
+    c_vert = get_color("Vert") or "#C1FFD7"
+    c_jaune = get_color("Jaune") or "#FFFF9D"
+    c_orange = get_color("Orange") or "#F6CF94"
+    c_gris = get_color("Gris") or "#D7D7D7"
+
+    # --- FONCTIONS DE CLIC ---
+    def clic_couleur(couleur):
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
+        valider_choix_couleur(materiau, couleur, relancer_nav_callback)
 
     # 3. Boutons couleurs
     g.btn_rouge = ctk.CTkButton(fenetre, text="Rouge", fg_color=c_rouge, hover_color="#D45757", text_color="black", 
                                 width=105, height=50, font=("Arial", 14, "bold"),
-                                command=lambda: valider_choix_couleur(materiau, "Rouge", relancer_nav_callback))
+                                command=lambda: clic_couleur("Rouge"))
     g.btn_rouge.place(x=65, y=190, anchor="center")
 
     g.btn_bleu = ctk.CTkButton(fenetre, text="Bleu", fg_color=c_bleu, hover_color="#648DDA", text_color="black", 
                                width=105, height=50, font=("Arial", 14, "bold"),
-                               command=lambda: valider_choix_couleur(materiau, "Bleu", relancer_nav_callback))
+                               command=lambda: clic_couleur("Bleu"))
     g.btn_bleu.place(relx=0.5, y=190, anchor="center")
     
     g.btn_vert = ctk.CTkButton(fenetre, text="Vert", fg_color=c_vert, hover_color="#63D084", text_color="black", 
                                width=105, height=50, font=("Arial", 14, "bold"),
-                               command=lambda: valider_choix_couleur(materiau, "Vert", relancer_nav_callback))
+                               command=lambda: clic_couleur("Vert"))
     g.btn_vert.place(x=295, y=190, anchor="center")
 
     g.btn_jaune = ctk.CTkButton(fenetre, text="Jaune", fg_color=c_jaune, hover_color="#D9DF17", text_color="black", 
                                 width=105, height=50, font=("Arial", 14, "bold"),
-                                command=lambda: valider_choix_couleur(materiau, "Jaune", relancer_nav_callback))
+                                command=lambda: clic_couleur("Jaune"))
     g.btn_jaune.place(x=295, y=250, anchor="center")
 
     g.btn_orange = ctk.CTkButton(fenetre, text="Orange", fg_color=c_orange, hover_color="#D27C02", text_color="black", 
                                  width=105, height=50, font=("Arial", 14, "bold"),
-                                 command=lambda: valider_choix_couleur(materiau, "Orange", relancer_nav_callback))
+                                 command=lambda: clic_couleur("Orange"))
     g.btn_orange.place(relx=0.5, y=250, anchor="center")
 
     g.btn_gris = ctk.CTkButton(fenetre, text="Gris", fg_color=c_gris, hover_color="#868686", text_color="black", 
                                width=105, height=50, font=("Arial", 14, "bold"),
-                               command=lambda: valider_choix_couleur(materiau, "Gris", relancer_nav_callback))
+                               command=lambda: clic_couleur("Gris"))
     g.btn_gris.place(x=65, y=250, anchor="center")
 
-    # 4. Bouton Voir Panier (Spécifique Écran Couleur - Placé à 440)
+    # 4. Bouton Voir Panier 
     from src.views.vue_panier import ouvrir_vue_panier
+    def voir_panier():
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
+        ouvrir_vue_panier(fenetre, lambda: ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callback))
+
     g.btn_voir_panier = ctk.CTkButton(
         fenetre, text="Voir Panier", width=200, height=40,
         fg_color="#E9F904", hover_color="#D4E404", text_color="black",
         font=("Arial", 12, "bold"),
-        command=lambda: ouvrir_vue_panier(fenetre, lambda: ecran_choix_couleur(fenetre, materiau, revenir_callback, relancer_nav_callback))
+        command=voir_panier
     )
     g.btn_voir_panier.place(relx=0.5, y=420, anchor="center")
 
-    # 5. Bouton Annuler (Placé à 500)
+    # 5. Bouton Annuler 
+    def annuler():
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
+        nettoyer_ecran_couleur()
+        relancer_nav_callback()
+
     g.btn_annuler_couleur = ctk.CTkButton(
         fenetre, text="Annuler", fg_color="#E74C3C", text_color="black", width=200, height=40,
-        command=lambda: [nettoyer_ecran_couleur(), relancer_nav_callback()]
+        command=annuler
     )
     g.btn_annuler_couleur.place(relx=0.5, y=480, anchor="center")
 
@@ -96,12 +117,11 @@ def valider_choix_couleur(materiau, couleur, relancer_nav_callback):
     ouvrir_selection_quantite(g.fenetre_principale, nom_item, relancer_nav_callback)
 
 def nettoyer_ecran_couleur():
-    if g.titre_couleur: g.titre_couleur.place_forget()
-    if g.btn_rouge: g.btn_rouge.place_forget()
-    if g.btn_bleu: g.btn_bleu.place_forget()
-    if g.btn_vert: g.btn_vert.place_forget()
-    if g.btn_jaune: g.btn_jaune.place_forget()
-    if g.btn_orange: g.btn_orange.place_forget()
-    if g.btn_gris: g.btn_gris.place_forget()
-    if g.btn_voir_panier: g.btn_voir_panier.place_forget()
-    if g.btn_annuler_couleur: g.btn_annuler_couleur.place_forget()
+    widgets = [
+        g.titre_couleur, g.btn_rouge, g.btn_bleu, g.btn_vert, 
+        g.btn_jaune, g.btn_orange, g.btn_gris, 
+        g.btn_voir_panier, g.btn_annuler_couleur
+    ]
+    for w in widgets:
+        if w is not None:
+            w.place_forget()

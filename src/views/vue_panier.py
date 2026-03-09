@@ -1,11 +1,23 @@
-# src/views/vue_panier.py
 import customtkinter as ctk
 from src.models import globals as g
 
 def ouvrir_vue_panier(fenetre, relancer_nav_callback):
-    # 1. NETTOYAGE COMPLET
+    # --- GESTION DU TIMER ---
+    def auto_logout():
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
+        for widget in fenetre.winfo_children():
+            widget.destroy()
+        relancer_nav_callback() 
+
+    # On annule l'ancien et on lance 90s
+    if g.timer_id:
+        fenetre.after_cancel(g.timer_id)
+    g.timer_id = fenetre.after(90000, auto_logout)
+
+    # 1. NETTOYAGE COMPLET (On détruit tout au lieu de cacher)
     for widget in fenetre.winfo_children():
-        widget.place_forget()
+        widget.destroy()
 
     # 2. TITRE
     ctk.CTkLabel(
@@ -28,7 +40,7 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
     )
     g.cadre_liste.place(relx=0.5, y=205, anchor="center")
 
-    # 4. AFFICHAGE DES ITEMS (Modifié pour Dictionnaire)
+    # 4. AFFICHAGE DES ITEMS
     if not g.panier:
         ctk.CTkLabel(
             g.cadre_liste, 
@@ -46,13 +58,15 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
                 anchor="w"
             ).pack(fill="x", padx=10, pady=5)
 
-    # 5. FONCTION DE SORTIE
+    # 5. FONCTION DE SORTIE MANUELLE
     def quitter_panier():
+        if g.timer_id:
+            fenetre.after_cancel(g.timer_id)
         for widget in fenetre.winfo_children():
-            widget.place_forget()
+            widget.destroy()
         relancer_nav_callback()
 
-    # 6. BOUTONS AJUSTÉS
+    # 6. BOUTONS
     g.btn_retour_panier = ctk.CTkButton(
         fenetre, text="← Continuer la sélection", width=250, height=40,
         fg_color="#B9E9FF", text_color="black", hover_color="#A0D8F0",
@@ -66,6 +80,5 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
             fenetre, text="Vider le panier", width=150, height=30,
             fg_color="#FFCCCC", text_color="#C0392B", hover_color="#FFB3B3",
             font=("Arial", 11),
-            # On utilise .clear() car c'est un dictionnaire
             command=lambda: [g.panier.clear(), ouvrir_vue_panier(fenetre, relancer_nav_callback)]
         ).place(relx=0.5, y=500, anchor="center")
