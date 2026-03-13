@@ -27,7 +27,7 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
         text_color="#2C3E50"
     ).place(relx=0.5, y=35, anchor="center")
 
-    # 3. CADRE SCROLLABLE
+    # 3. CADRE SCROLLABLE (Modifié pour le tactile)
     g.cadre_liste = ctk.CTkScrollableFrame(
         fenetre, 
         width=300, 
@@ -36,7 +36,9 @@ def ouvrir_vue_panier(fenetre, relancer_nav_callback):
         border_width=2, 
         border_color="#E0E0E0",
         label_text="Articles sélectionnés",
-        label_font=("Arial", 12, "bold")
+        label_font=("Arial", 12, "bold"),
+        scrollbar_button_color="#D0D0D0",      # Couleur barre tactile
+        scrollbar_button_hover_color="#A0A0A0" # Couleur barre pression
     )
     g.cadre_liste.place(relx=0.5, y=205, anchor="center")
 

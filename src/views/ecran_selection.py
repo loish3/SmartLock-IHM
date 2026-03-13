@@ -10,6 +10,9 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
     Ouvre l'écran détaillé de sélection de quantité avec image et description dynamiques.
     """
     
+    # --- CONFIGURATION FOND ---
+    fenetre.configure(fg_color="white") # Force le fond en blanc pur
+
     # --- FONCTION DE NETTOYAGE ---
     def nettoyer_et_quitter():
         for widget in fenetre.winfo_children():
@@ -82,8 +85,11 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
         print(f"Erreur : Impossible de charger {chemin_complet} -> {e}")
         photo_item = None
 
-    # Cadre Photo
-    cadre_photo = ctk.CTkFrame(fenetre, width=150, height=180, corner_radius=15, fg_color="#E0E0E0")
+    # --- CADRE PHOTO CORRIGÉ (Blanc + Bordure douce) ---
+    cadre_photo = ctk.CTkFrame(
+        fenetre, width=150, height=180, corner_radius=15, 
+        fg_color="white", border_width=1, border_color="#E0E0E0"
+    )
     cadre_photo.place(x=20, y=85)
 
     if photo_item:
@@ -95,12 +101,13 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
     ctk.CTkLabel(fenetre, text=f"Reste : {stock_disponible} g", font=("Arial", 14, "bold"), text_color="black").place(x=190, y=95)
     ctk.CTkLabel(fenetre, text="Quantité :", font=("Arial", 14), text_color="black").place(x=190, y=130)
 
+    # Cadre sélecteur transparent pour ne pas faire de tâche grise
     cadre_selecteur = ctk.CTkFrame(fenetre, width=130, height=50, corner_radius=10, fg_color="transparent")
     cadre_selecteur.place(x=190, y=160)
 
     ctk.CTkButton(
         cadre_selecteur, text="-", width=40, height=40, corner_radius=10,
-        fg_color="#E0E0E0", text_color="black", hover_color="#CCCCCC",
+        fg_color="#F2F2F2", text_color="black", hover_color="#CCCCCC", # Gris très clair
         font=("Arial", 18, "bold"), command=lambda: modifier_quantite(-1)
     ).place(x=0, y=5)
 
@@ -108,7 +115,7 @@ def ouvrir_selection_quantite(fenetre, nom_item, relancer_nav_callback):
 
     ctk.CTkButton(
         cadre_selecteur, text="+", width=40, height=40, corner_radius=10,
-        fg_color="#E0E0E0", text_color="black", hover_color="#CCCCCC",
+        fg_color="#F2F2F2", text_color="black", hover_color="#CCCCCC", # Gris très clair
         font=("Arial", 18, "bold"), command=lambda: modifier_quantite(1)
     ).place(x=90, y=5)
 
